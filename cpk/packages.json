@@ -1,0 +1,25 @@
+{
+  "packages": [
+    {
+      "name": "git",
+      "version": "2.44.0",
+      "description": "version control tool",
+      "url": "https://github.com/git-for-windows/git/releases/latest/download/Git-2.44.0-64-bit.exe",
+      "installer": "exe"
+    },
+    {
+      "name": "firefox",
+      "version": "123.0",
+      "description": "Modern web browser",
+      "url": "https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US",
+      "installer": "exe"
+    },
+    {
+      "name": "7zip",
+      "version": "23.01",
+      "description": "File archiver",
+      "url": "https://www.7-zip.org/a/7z2301-x64.exe",
+      "installer": "exe"
+    }
+  ]
+}

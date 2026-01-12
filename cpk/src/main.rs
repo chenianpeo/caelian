@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::fs;
 
 use std::path::Path;
@@ -18,6 +18,19 @@ struct Package {
     description: String,
     url: String,
     installer: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct InstalledPackage {
+    name: String,
+    version: String,
+    installer: String,
+    installed_at: String,
+}
+
+#[derive(Serialize, Deserialize)]
+struct InstalledRepo {
+    installed: Vec<InstalledPackage>,
 }
 
 #[derive(Deserialize)]
@@ -81,11 +94,38 @@ async fn main() {
             println!("Running installer...");
 
             run_installer(&file_path);
+
+            let mut installed_repo = load_installed();
+
+            installed_repo.installed.push(InstalledPackage {
+                name: pkg.name.clone(),
+                version: pkg.version.clone(),
+                installer: file_path.clone(),
+                installed_at: chrono::Local::now().to_rfc3339(),
+            });
+            save_installed(&installed_repo);
             println!("√ Installed successfully");
         }
 
         Commands::Uninstall { name } => {
-            println!("Uninstall packages: {name}");
+            let mut repo = load_installed();
+
+            if let Some(index) = find_installed(&name, &repo) {
+                let pkg = &repo.installed[index];
+
+                println!("found installed package: {} {}", pkg.name, pkg.version);
+                println!("installer recorded: {}", pkg.installer);
+
+                println!("Running uninstaller...");
+                run_uninstaller(&pkg.installer);
+
+                repo.installed.remove(index);
+                save_installed(&repo);
+
+                println!("√ Uninstalled successfully");
+            } else {
+                println!("❌ package not found in installed list");
+            }
         }
     }
 }
@@ -153,5 +193,41 @@ fn run_installer(path: &str) {
     // exit if success and return true, exit code isn't 0 express install fail
     if !status.success() {
         panic!("❌ installer returned failure");
+    }
+}
+
+// load installed database
+fn load_installed() -> InstalledRepo {
+    let data = fs::read_to_string("installed.json")
+    .unwrap_or("{\"installed\": []}".to_string());
+
+    serde_json::from_str::<InstalledRepo>(&data)
+    .expect("❌ failed to parse installed.json")
+}
+
+// save relevant database
+fn save_installed(repo: &InstalledRepo) {
+    let json = serde_json::to_string_pretty(repo)
+    .expect("❌ failed to serialize installed repo");
+
+    fs::write("installed.json", json)
+    .expect("❌ failed to write installed.json");
+}
+
+// find installed application
+fn find_installed(name: &str, repo: &InstalledRepo) -> Option<usize> {
+    repo.installed.iter().position(|p| p.name == name)
+}
+
+// run uninstall application
+fn run_uninstaller(installer: &str) {
+    let status = Command::new(installer)
+    .arg("/S")
+    .arg("/uninstall")
+    .status()
+    .expect("❌ failed to run uninstaller");
+
+    if !status.success() {
+        println!("⚠ uninstaller exited with non-zero status");
     }
 }

@@ -1,3 +1,5 @@
+use cpk::logical_main;
+
 fn main() {
-    println!("Hello World");
+    logical_main();
 }

@@ -1,14 +1,19 @@
 use std::fs;
-use std::path::Path;
+use std::env;
 
 use crate::models::package::Package;
 use crate::models::package_database::PackageDatabase;
 
 pub fn run(keyword: &str) {
-    let path = Path::new("data/packages.json");
+    let exe_dir = env::current_exe()
+        .ok()
+        .and_then(|p| p.parent().map(|p| p.to_path_buf()))
+        .expect("Failed to get executable directory");
+    
+    let path = exe_dir.join("data").join("packages.json");
 
     if !path.exists() {
-        println!("Package database not found: data/packages.json");
+        println!("Package database not found: {:?}", path);
         return;
     }
 

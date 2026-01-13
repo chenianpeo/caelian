@@ -1,6 +1,7 @@
 pub mod install;
 pub mod uninstall;
 pub mod list;
+pub mod packagelist;
 pub mod search;
 pub mod update;
 
@@ -11,6 +12,7 @@ pub fn run_command(args: CliArgs) {
         Some(Commands::Install { package }) => install::run(&package),
         Some(Commands::Uninstall { package }) => uninstall::run(&package),
         Some(Commands::List) => list::run(),
+        Some(Commands::PackageList) => packagelist::run(),
         Some(Commands::Search { keyword }) => search::run(&keyword),
         Some(Commands::Update) => update::run(),
         None => {

@@ -13,6 +13,7 @@ pub enum Commands {
     Install { package: String },
     Uninstall { package: String },
     List,
+    PackageList,
     Search { keyword: String },
     Update,
 }

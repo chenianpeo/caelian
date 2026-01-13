@@ -1,5 +1,6 @@
 mod cli;
 mod commands;
+mod models;
 
 use cli::args::CliArgs;
 use commands::run_command;

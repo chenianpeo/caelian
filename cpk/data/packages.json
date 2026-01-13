@@ -1,0 +1,64 @@
+{
+  "packages": [
+    {
+      "name": "7zip",
+      "version": "22.01",
+      "description": "open-source file archiver wit high compression ratio",
+      "url": "https://www.7-zip.org/a/7z2201-x64.exe",
+      "installer_type": "exe",
+      "silent_args": "/S",
+      "env_path": "bin",
+      "size": 1.2,
+      "checksum": "aaa111bbb222",
+      "tags": ["archive", "utility", "tool"]
+    },
+    {
+      "name": "notepadplusplus",
+      "version": "8.5.1",
+      "description": "Notepad++ is a free source code editor and Notepad replacement.",
+      "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.5.1/npp.8.5.1.Installer.x64.exe",
+      "installer_type": "exe",
+      "silent_args": "/S",
+      "env_path": "bin",
+      "size": 4.5,
+      "checksum": "ccc333ddd444",
+      "tags": ["editor", "text", "tool"]
+    },
+    {
+      "name": "curl",
+      "version": "8.2.1",
+      "description": "curl is a command-line tool for transferring data with URLs.",
+      "url": "https://curl.se/windows/dl-8.2.1_3/curl-8.2.1_3-win64-mingw.zip",
+      "installer_type": "zip",
+      "silent_args": "",
+      "env_path": "bin",
+      "size": 2.1,
+      "checksum": "eee555fff666",
+      "tags": ["network", "cli", "tool"]
+    },
+    {
+      "name": "wget",
+      "version": "1.21.3",
+      "description": "GNU Wget is a free utility for non-interactive download of files from the Web.",
+      "url": "https://eternallybored.org/misc/wget/releases/wget-1.21.3-win64.zip",
+      "installer_type": "zip",
+      "silent_args": "",
+      "env_path": "bin",
+      "size": 1.8,
+      "checksum": "ggg777hhh888",
+      "tags": ["network", "cli", "tool"]
+    },
+    {
+      "name": "tree",
+      "version": "1.8.0",
+      "description": "Tree is a small command-line program that recursively lists directories in a tree-like format.",
+      "url": "https://example.com/tools/tree-1.8.0-win64.zip",
+      "installer_type": "zip",
+      "silent_args": "",
+      "env_path": "bin",
+      "size": 0.5,
+      "checksum": "iii999jjj000",
+      "tags": ["cli", "utility", "tool"]
+    }
+  ]
+}

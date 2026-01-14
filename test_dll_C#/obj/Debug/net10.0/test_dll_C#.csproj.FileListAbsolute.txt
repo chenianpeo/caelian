@@ -1,0 +1,15 @@
+D:\Documents\Code\Projects\caelian\test_dll_C#\bin\Debug\net10.0\test_dll_C#.exe
+D:\Documents\Code\Projects\caelian\test_dll_C#\bin\Debug\net10.0\test_dll_C#.deps.json
+D:\Documents\Code\Projects\caelian\test_dll_C#\bin\Debug\net10.0\test_dll_C#.runtimeconfig.json
+D:\Documents\Code\Projects\caelian\test_dll_C#\bin\Debug\net10.0\test_dll_C#.dll
+D:\Documents\Code\Projects\caelian\test_dll_C#\bin\Debug\net10.0\test_dll_C#.pdb
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.AssemblyInfoInputs.cache
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.AssemblyInfo.cs
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.csproj.CoreCompileInputs.cache
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.sourcelink.json
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.dll
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\refint\test_dll_C#.dll
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.pdb
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\test_dll_C#.genruntimeconfig.cache
+D:\Documents\Code\Projects\caelian\test_dll_C#\obj\Debug\net10.0\ref\test_dll_C#.dll

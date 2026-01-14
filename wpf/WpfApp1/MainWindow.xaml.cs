@@ -29,5 +29,9 @@ namespace WpfApp1
                 txtName.Clear();
             }
         }
+
+        private void lstNames_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
     }
 }

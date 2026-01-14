@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
+        Icon="D:\Documents\AppData\Pictures\CI.ico"
         Title="WPF" Height="500" Width="800">
     <Grid Margin="10">
 
@@ -20,7 +21,7 @@
 
         <Label Grid.Column="1" HorizontalAlignment="Right">Names</Label>
         
-        <ListBox Grid.Row="1" x:Name="lstNames" />
+        <ListBox Grid.Row="1" x:Name="lstNames" SelectionChanged="lstNames_SelectionChanged" />
 
         <StackPanel Grid.Row="1" Grid.Column='1' Margin="5,0,0,0">
             <TextBox x:Name="txtName" />

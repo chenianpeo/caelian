@@ -31,7 +31,8 @@ pub fn run(package: &str) {
         other => other,
     };
 
-    let downloaded_pkg_path = packages_dir.join(format!("{}-{}.{}", pkg.name, pkg.version, file_ext));
+    let downloaded_pkg_path =
+        packages_dir.join(format!("{}-{}.{}", pkg.name, pkg.version, file_ext));
     if !downloaded_pkg_path.exists() {
         if let Err(e) = download::download_file(&pkg.url, &downloaded_pkg_path) {
             eprintln!("Download failed: {}", e);

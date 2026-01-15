@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.IO;
 
 class Program
 {
-    [DllImport(@"d:\Documents\Code\Projects\caelian\cpk_rust\target\debug\cpk_rust.dll", CallingConvention = CallingConvention.Cdecl)]
+    private const string DllName = "cpk_rust.dll";
+    
+    [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
     public static extern void ffi_hello
         ([MarshalAs(UnmanagedType.LPStr)] string name);
+    
+    static Program()
+    {
+        string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, DllName);
+        if (!File.Exists(dllPath))
+        {
+            Console.WriteLine($"Warning: DLL not found at {dllPath}");
+        }
+    }
 
     static void Main()
     {
-        Console.WriteLine("Calling Rust function from C#:");
+        Console.WriteLine("Calling rust function from C#:");
         ffi_hello("lsr");
         Console.WriteLine("\nPress any key to exit...");
         Console.ReadKey();

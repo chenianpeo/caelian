@@ -1,9 +1,11 @@
+// write test code
 #[cfg(test)]
 mod test {
-    use crate::hello_c::hello_c::hello;
+    // import test needy function
+    use crate::hello_c::hello_c::ffi_hello;
 
     #[test]
-    fn test_hello_c() {
-        hello("joke");
+    fn test_ffi_hello() {
+        ffi_hello("joke".to_string());
     }
 }

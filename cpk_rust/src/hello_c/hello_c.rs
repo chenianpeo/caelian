@@ -1,13 +1,10 @@
-use std::ffi::{CStr, c_char};
-
-pub fn hello(name: &str) {
-    println!("hello {}, welcome to cpk", name);
+// write rust code
+fn hello(name: &str) {
+    print!("hello {name}, welcome to cpk");
 }
 
+// write C# code ffi api
 #[unsafe(no_mangle)]
-pub extern "C" fn hello_ffi(name: *const c_char) {
-    let name = unsafe { CStr::from_ptr(name) };
-    if let Ok(name_str) = name.to_str() {
-        hello(name_str);
-    }
+pub extern "C" fn ffi_hello(name: String) {
+    hello(&name);
 }

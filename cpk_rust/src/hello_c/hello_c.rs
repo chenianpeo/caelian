@@ -1,6 +1,6 @@
 // write rust code
 fn hello(name: &str) {
-    print!("hello {name}, welcome to cpk");
+    println!("hello {name}, welcome to cpk");
 }
 
 // write C# code ffi api

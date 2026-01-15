@@ -1,1 +1,0 @@
-pub mod packages_list_obtain;

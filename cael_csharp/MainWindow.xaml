@@ -4,19 +4,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cael_csharp"
-        mc:Ignorable="d"
+        Icon="D:\Documents\AppData\Pictures\CI.ico"
         Title="Caelian" Height="450" Width="800">
-    <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <Grid Margin="10">
+        <!-- windows body -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-        <StackPanel>
-            <TextBlock HorizontalAlignment="Center">Cael</TextBlock>
-            <Button Margin="0 10" Click="Button_Click">AppAdd</Button>
-            <Button Click="Button_Click_1">Clear</Button>
-        </StackPanel>
-        <ListBox Grid.Column="1" Margin="5" x:Name="boxPrint"/>
+        <!-- top -->
+        <Grid Grid.Row="0" Margin="10 0 10 0" Background="AliceBlue">
+            
+        </Grid>
+
+        <!-- middle -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <!-- middle left content -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="120"/>
+                </Grid.RowDefinitions>
+                
+                <!-- left top -->
+                <Grid Grid.Row="0" Background="#FFBBE7E7">
+                    
+                </Grid>
+                
+                <!-- left bottom -->
+                <Grid Grid.Row="1" Background="Beige"
+                      >
+                    
+                </Grid>
+            </Grid>
+
+            <!-- middle right content-->
+            <Grid Grid.Column="1" Margin="10 0 0 0" Background="AntiqueWhite">
+                
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

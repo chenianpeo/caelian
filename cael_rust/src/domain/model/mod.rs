@@ -1,2 +1,2 @@
-pub mod package;
-pub mod main_mod;
+pub mod package_impl;
+pub mod package_mod;

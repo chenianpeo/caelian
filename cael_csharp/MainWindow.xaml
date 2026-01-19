@@ -5,17 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cael_csharp"
         Icon="D:\Documents\AppData\Pictures\CI.ico"
-        Title="Caelian" Height="450" Width="800">
+        Title="Caelian" Height="700" Width="1100">
+    
     <Grid Margin="10">
-        <!-- windows body -->
+        <!-- windows body area -->
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <!-- top -->
-        <Grid Grid.Row="0" Margin="10 0 10 0" Background="AliceBlue">
+        <Grid Grid.Row="0" Margin="10 0 10 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             
+            <!-- top left area -->
+            <Grid Grid.Column="0" Background="AliceBlue">
+                
+            </Grid>
+            
+            <!-- top right area -->
+            <Grid Grid.Column="1" Background="Aquamarine">
+                
+            </Grid>
         </Grid>
 
         <!-- middle -->

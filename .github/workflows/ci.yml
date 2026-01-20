@@ -1,9 +1,7 @@
 # Minimal, robust Rust CI that auto-detects Cargo.toml
 on:
   push:
-    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
 
 jobs:
   ci:

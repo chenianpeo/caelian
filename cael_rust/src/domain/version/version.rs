@@ -9,14 +9,17 @@ pub struct Version {
 
 impl Version {
     pub fn new(major: u32, minor: u32, patch: u32) -> Self {
-        Self {major, minor, patch}
+        Self {
+            major,
+            minor,
+            patch,
+        }
     }
 }
 
 impl Ord for Version {
     fn cmp(&self, other: &Self) -> Ordering {
-        (self.major, self.minor, self.patch)
-        .cmp(&(other.major, other.minor, other.patch))
+        (self.major, self.minor, self.patch).cmp(&(other.major, other.minor, other.patch))
     }
 }
 

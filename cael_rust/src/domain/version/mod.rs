@@ -1,5 +1,5 @@
-mod version;
 mod requirement;
+mod version;
 
-pub use version::Version;
 pub use requirement::VersionRequirement;
+pub use version::Version;

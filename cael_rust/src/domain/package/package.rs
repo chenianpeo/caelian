@@ -1,8 +1,8 @@
-use super::identity::PackageID;
-use super::metadata::{Description, License, Homepage, Author, Tag};
+use super::constraint::{CapabilitySet, FeatureFlag, PlatformConstraint};
 use super::dependency::Dependency;
-use super::constraint::{CapabilitySet, PlatformConstraint, FeatureFlag};
+use super::identity::PackageID;
 use super::install::{InstallIntent, InstallScope};
+use super::metadata::{Author, Description, Homepage, License, Tag};
 use crate::domain::version::Version;
 
 pub struct Package {

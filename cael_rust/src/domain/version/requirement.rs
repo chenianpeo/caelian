@@ -22,7 +22,7 @@ impl VersionRequirement {
             VersionRequirement::GreaterOrEqual(v) => version >= v,
 
             VersionRequirement::LessThan(v) => version < v,
-            
+
             VersionRequirement::LessOrEqual(v) => version <= v,
         }
     }

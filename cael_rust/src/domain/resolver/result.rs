@@ -1,6 +1,6 @@
 use crate::domain::package::PackageID;
 use crate::domain::package::PlatformConstraint;
-use crate::domain::version::{VersionRequirement, Version};
+use crate::domain::version::{Version, VersionRequirement};
 
 pub enum ResolverResult {
     Resolved(ResolutionPlan),
@@ -36,7 +36,7 @@ pub enum DecisionReason {
     VersionSelected {
         requirement: VersionRequirement,
         selected: Version,
-    }
+    },
 }
 
 pub struct ResolutionFailure {
@@ -63,5 +63,5 @@ pub enum DependencyConflict {
     MissingDependency {
         package: PackageID,
         dependency: PackageID,
-    }
+    },
 }

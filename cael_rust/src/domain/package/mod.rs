@@ -1,13 +1,13 @@
-mod package;
-mod identity;
-mod metadata;
-mod dependency;
 mod constraint;
+mod dependency;
+mod identity;
 mod install;
+mod metadata;
+mod package;
 
-pub use package::Package;
-pub use identity::PackageID;
-pub use metadata::{Description, License, Homepage, Author, Tag};
+pub use constraint::{CapabilitySet, FeatureFlag, PlatformConstraint};
 pub use dependency::Dependency;
-pub use constraint::{PlatformConstraint, CapabilitySet, FeatureFlag};
+pub use identity::PackageID;
 pub use install::{InstallIntent, InstallScope};
+pub use metadata::{Author, Description, Homepage, License, Tag};
+pub use package::Package;

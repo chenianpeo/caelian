@@ -6,4 +6,4 @@ pub struct Homepage {}
 
 pub struct Author {}
 
-pub enum Tag{}
+pub enum Tag {}

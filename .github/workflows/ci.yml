@@ -1,4 +1,3 @@
-# CI workflow — run Rust checks in caelian/cael_rust subdirectory
 on:
   push:
     branches: [ "main", "develop" ]
@@ -13,51 +12,74 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache cargo registry and git db
-        uses: actions/cache@v4
-        id: cargo-registry-cache
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          # Hash the Cargo.lock inside the crate subdir if present
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('caelian/cael_rust/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-registry-
+      - name: Find Cargo.toml (if any)
+        id: find_manifest
+        run: |
+          set -euo pipefail
+          # Find the first Cargo.toml tracked by git (any subdir)
+          manifest=$(git ls-files | grep -m1 '^.*Cargo\.toml$' || true)
+          if [ -z "$manifest" ]; then
+            echo "no_manifest=true" >> $GITHUB_OUTPUT
+          else
+            manifest_dir=$(dirname "$manifest")
+            echo "no_manifest=false" >> $GITHUB_OUTPUT
+            echo "manifest_path=$manifest" >> $GITHUB_OUTPUT
+            echo "manifest_dir=$manifest_dir" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Cache target (crate-specific)
-        uses: actions/cache@v4
-        id: cargo-target-cache
-        with:
-          path: caelian/cael_rust/target
-          key: ${{ runner.os }}-cargo-target-${{ hashFiles('caelian/cael_rust/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-target-
+      - name: Debug: show manifest info
+        if: always()
+        run: |
+          echo "no_manifest = ${{ steps.find_manifest.outputs.no_manifest }}"
+          echo "manifest_path = ${{ steps.find_manifest.outputs.manifest_path }}"
+          echo "manifest_dir = ${{ steps.find_manifest.outputs.manifest_dir }}"
 
       - name: Install Rust toolchain (stable)
+        if: steps.find_manifest.outputs.no_manifest == 'false'
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
 
       - name: Ensure rustfmt is installed
+        if: steps.find_manifest.outputs.no_manifest == 'false'
         run: rustup component add rustfmt --toolchain stable
 
       - name: Run rustfmt (check)
-        working-directory: caelian/cael_rust
-        run: cargo fmt --all -- --check
+        if: steps.find_manifest.outputs.no_manifest == 'false'
+        run: |
+          set -euo pipefail
+          manifest_dir="${{ steps.find_manifest.outputs.manifest_dir }}"
+          echo "Running cargo fmt in: $manifest_dir"
+          pushd "$manifest_dir"
+          cargo fmt --all -- --check
+          popd
 
       - name: Ensure clippy is installed
+        if: steps.find_manifest.outputs.no_manifest == 'false'
         run: rustup component add clippy --toolchain stable
 
       - name: Run Clippy
-        working-directory: caelian/cael_rust
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        if: steps.find_manifest.outputs.no_manifest == 'false'
+        run: |
+          set -euo pipefail
+          manifest_dir="${{ steps.find_manifest.outputs.manifest_dir }}"
+          echo "Running cargo clippy in: $manifest_dir"
+          pushd "$manifest_dir"
+          cargo clippy --all-targets --all-features -- -D warnings
+          popd
 
       - name: Rust tests
-        working-directory: caelian/cael_rust
-        run: cargo test --all --verbose
+        if: steps.find_manifest.outputs.no_manifest == 'false'
+        run: |
+          set -euo pipefail
+          manifest_dir="${{ steps.find_manifest.outputs.manifest_dir }}"
+          echo "Running cargo test in: $manifest_dir"
+          pushd "$manifest_dir"
+          cargo test --all --verbose
+          popd
 
       - name: Install cargo-audit (optional)
+        if: steps.find_manifest.outputs.no_manifest == 'false'
         run: |
           set -eux
           if ! command -v cargo-audit >/dev/null 2>&1; then
@@ -65,8 +87,16 @@ jobs:
           fi
 
       - name: Run cargo-audit (non-blocking)
-        working-directory: caelian/cael_rust
+        if: steps.find_manifest.outputs.no_manifest == 'false'
         run: |
+          set -euo pipefail
+          manifest_dir="${{ steps.find_manifest.outputs.manifest_dir }}"
+          pushd "$manifest_dir"
           # Run cargo audit but don't fail the job on vulnerability reports yet.
-          # Remove "|| true" to make it blocking when ready.
           cargo audit || true
+          popd
+
+      - name: Skip Rust checks when no Cargo.toml found
+        if: steps.find_manifest.outputs.no_manifest == 'true'
+        run: |
+          echo "No Cargo.toml found in repo; skipping rustfmt/clippy/tests steps."

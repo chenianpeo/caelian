@@ -1,6 +1,6 @@
-use crate::domain::package::PackageID;
-use crate::domain::package::PlatformConstraint;
-use crate::domain::version::{Version, VersionRequirement};
+use crate::domain::package_impl::PackageID;
+use crate::domain::package_impl::PlatformConstraint;
+use crate::domain::version_impl::{Version, VersionRequirement};
 
 pub enum ResolverResult {
     Resolved(ResolutionPlan),

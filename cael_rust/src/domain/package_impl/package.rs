@@ -3,7 +3,7 @@ use super::dependency::Dependency;
 use super::identity::PackageID;
 use super::install::{InstallIntent, InstallScope};
 use super::metadata::{Author, Description, Homepage, License, Tag};
-use crate::domain::version::Version;
+use crate::domain::version_impl::Version;
 
 pub struct Package {
     pub id: PackageID,

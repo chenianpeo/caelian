@@ -1,0 +1,64 @@
+on: 
+  push: 
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache cargo registry and git db
+        uses: actions/cache@v4
+        id: cargo-registry-cache
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry-
+
+      - name: Cache target
+        uses: actions/cache@v4
+        id: cargo-target-cache
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-target-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-target-
+
+      - name: Install Rust toolchain (stable)
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Ensure rustfmt is installed
+        run: rustup component add rustfmt --toolchain stable
+
+      - name: Run rustfmt (check)
+        run: cargo fmt --all -- --check
+
+      - name: Ensure clippy is installed
+        run: rustup component add clippy --toolchain stable
+
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Rust tests
+        run: cargo test --all --verbose
+
+      - name: Install cargo-audit
+        run: |
+          set -eux
+          if ! command -v cargo-audit >/dev/null 2>&1; then
+            cargo install --locked cargo-audit || true
+          fi
+
+      - name: Run cargo-audit
+        run: |
+        cargo audit || ture

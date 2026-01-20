@@ -1,83 +1,75 @@
-# CI — run Rust checks for the crate located in caelian/cael_rust
+# Minimal, robust Rust CI that auto-detects Cargo.toml
 on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main", "develop" ]
 
-env:
-  PROJECT_DIR: "caelian/cael_rust"
-
 jobs:
   ci:
-    name: CI
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Ensure project directory exists
+      - name: Find Cargo.toml
+        id: find_manifest
         run: |
-          if [ ! -d "${{ env.PROJECT_DIR }}" ]; then
-            echo "ERROR: project directory '${{ env.PROJECT_DIR }}' not found."
-            echo "Make sure Cargo.toml is at '${{ env.PROJECT_DIR }}/Cargo.toml' and that the path is correct."
-            ls -la
-            exit 1
+          set -euo pipefail
+          # Find the first Cargo.toml tracked by git
+          manifest=$(git ls-files | grep -m1 '^.*Cargo\.toml$' || true)
+          if [ -z "$manifest" ]; then
+            echo "manifest=" >> $GITHUB_OUTPUT
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "manifest=$manifest" >> $GITHUB_OUTPUT
+            echo "found=true" >> $GITHUB_OUTPUT
           fi
 
-      - name: Cache cargo registry and git db
-        uses: actions/cache@v4
-        id: cargo-registry-cache
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles(env.PROJECT_DIR && format('{0}/Cargo.lock', env.PROJECT_DIR) ) }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-registry-
+      - name: Debug manifest info
+        run: |
+          echo "found = ${{ steps.find_manifest.outputs.found }}"
+          echo "manifest = '${{ steps.find_manifest.outputs.manifest }}'"
 
-      - name: Cache target (crate-specific)
-        uses: actions/cache@v4
-        id: cargo-target-cache
-        with:
-          path: ${{ env.PROJECT_DIR }}/target
-          key: ${{ runner.os }}-cargo-target-${{ hashFiles(env.PROJECT_DIR && format('{0}/Cargo.lock', env.PROJECT_DIR) ) }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-target-
-
-      - name: Install Rust toolchain (stable)
+      - name: Install Rust toolchain
+        if: steps.find_manifest.outputs.found == 'true'
         uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
 
       - name: Ensure rustfmt is installed
+        if: steps.find_manifest.outputs.found == 'true'
         run: rustup component add rustfmt --toolchain stable
 
       - name: Run rustfmt (check)
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: cargo fmt --all -- --check
+        if: steps.find_manifest.outputs.found == 'true'
+        run: |
+          manifest="${{ steps.find_manifest.outputs.manifest }}"
+          echo "Running: cargo fmt --manifest-path \"$manifest\" --all -- --check"
+          cargo fmt --manifest-path "$manifest" --all -- --check
 
       - name: Ensure clippy is installed
+        if: steps.find_manifest.outputs.found == 'true'
         run: rustup component add clippy --toolchain stable
 
-      - name: Run Clippy
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: cargo clippy --all-targets --all-features -- -D warnings
-
-      - name: Rust tests
-        working-directory: ${{ env.PROJECT_DIR }}
-        run: cargo test --all --verbose
-
-      - name: Install cargo-audit (optional)
+      - name: Run clippy
+        if: steps.find_manifest.outputs.found == 'true'
         run: |
-          set -eux
-          if ! command -v cargo-audit >/dev/null 2>&1; then
-            cargo install --locked cargo-audit || true
-          fi
+          manifest="${{ steps.find_manifest.outputs.manifest }}"
+          echo "Running: cargo clippy --manifest-path \"$manifest\" --all-targets --all-features -- -D warnings"
+          cargo clippy --manifest-path "$manifest" --all-targets --all-features -- -D warnings
 
-      - name: Run cargo-audit (non-blocking)
-        working-directory: ${{ env.PROJECT_DIR }}
+      - name: Run tests
+        if: steps.find_manifest.outputs.found == 'true'
         run: |
-          # Run cargo audit but don't fail the job on vulnerability reports yet.
-          # Remove "|| true" to make it blocking when ready.
-          cargo audit || true
+          manifest="${{ steps.find_manifest.outputs.manifest }}"
+          echo "Running: cargo test --manifest-path \"$manifest\" --all --verbose"
+          cargo test --manifest-path "$manifest" --all --verbose
+
+      - name: Fail early if no Cargo.toml found
+        if: steps.find_manifest.outputs.found == 'false'
+        run: |
+          echo "No Cargo.toml found in repository. Nothing to run."
+          echo "Checked files:"
+          git ls-files | sed -n '1,200p'
+          exit 1

@@ -5,7 +5,7 @@ mod install;
 mod metadata;
 mod package;
 
-pub use constraint::{CapabilitySet, FeatureFlag, PlatformConstraint};
+pub use constraint::{CapabilitySet, FeatureFlag, PackageSource, PlatformConstraint};
 pub use dependency::Dependency;
 pub use identity::PackageID;
 pub use install::{InstallIntent, InstallScope};

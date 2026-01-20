@@ -1,4 +1,4 @@
-use super::constraint::{CapabilitySet, FeatureFlag, PlatformConstraint};
+use super::constraint::{CapabilitySet, FeatureFlag, PackageSource, PlatformConstraint};
 use super::dependency::Dependency;
 use super::identity::PackageID;
 use super::install::{InstallIntent, InstallScope};
@@ -16,6 +16,7 @@ pub struct Package {
     pub tags: Vec<Tag>,
 
     pub dependencies: Vec<Dependency>,
+    pub source: PackageSource,
 
     pub capabilities: CapabilitySet,
     pub platform: PlatformConstraint,

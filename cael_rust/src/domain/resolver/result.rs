@@ -1,4 +1,5 @@
 use crate::domain::package_impl::PackageID;
+use crate::domain::package_impl::PackageSource;
 use crate::domain::package_impl::PlatformConstraint;
 use crate::domain::version_impl::{Version, VersionRequirement};
 
@@ -7,10 +8,11 @@ pub enum ResolverResult {
     Unresolved(ResolutionFailure),
 }
 
+// resolver success
 pub struct ResolutionPlan {
-    pub install_order: Vec<PackageID>,
-    pub packages: Vec<ResolvedPackage>,
-    pub decisions: Vec<DecisionRecord>,
+    pub install_order: Vec<PackageID>,  // install order
+    pub packages: Vec<ResolvedPackage>, // packages list
+    pub decisions: Vec<DecisionRecord>, // decision record
 }
 
 pub struct ResolvedPackage {
@@ -19,17 +21,12 @@ pub struct ResolvedPackage {
     pub source: PackageSource,
 }
 
-pub enum PackageSource {
-    Registry,
-    Git,
-    Local,
-}
-
 pub struct DecisionRecord {
     pub package_id: PackageID,
     pub reason: DecisionReason,
 }
 
+// decision reason enum
 pub enum DecisionReason {
     RootRequest,
     DependencyOf(PackageID),
@@ -39,8 +36,9 @@ pub enum DecisionReason {
     },
 }
 
+// resolver failure
 pub struct ResolutionFailure {
-    pub conflicts: Vec<DependencyConflict>,
+    pub conflicts: Vec<DependencyConflict>, // conflict list
 }
 
 pub enum DependencyConflict {

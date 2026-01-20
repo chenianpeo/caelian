@@ -1,5 +1,6 @@
-on: 
-  push: 
+# CI workflow — run Rust checks in caelian/cael_rust subdirectory
+on:
+  push:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main", "develop" ]
@@ -19,16 +20,17 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          # Hash the Cargo.lock inside the crate subdir if present
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('caelian/cael_rust/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-registry-
 
-      - name: Cache target
+      - name: Cache target (crate-specific)
         uses: actions/cache@v4
         id: cargo-target-cache
         with:
-          path: target
-          key: ${{ runner.os }}-cargo-target-${{ hashFiles('**/Cargo.lock') }}
+          path: caelian/cael_rust/target
+          key: ${{ runner.os }}-cargo-target-${{ hashFiles('caelian/cael_rust/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-target-
 
@@ -41,24 +43,30 @@ jobs:
         run: rustup component add rustfmt --toolchain stable
 
       - name: Run rustfmt (check)
+        working-directory: caelian/cael_rust
         run: cargo fmt --all -- --check
 
       - name: Ensure clippy is installed
         run: rustup component add clippy --toolchain stable
 
       - name: Run Clippy
+        working-directory: caelian/cael_rust
         run: cargo clippy --all-targets --all-features -- -D warnings
 
       - name: Rust tests
+        working-directory: caelian/cael_rust
         run: cargo test --all --verbose
 
-      - name: Install cargo-audit
+      - name: Install cargo-audit (optional)
         run: |
           set -eux
           if ! command -v cargo-audit >/dev/null 2>&1; then
             cargo install --locked cargo-audit || true
           fi
 
-      - name: Run cargo-audit
+      - name: Run cargo-audit (non-blocking)
+        working-directory: caelian/cael_rust
         run: |
-          cargo audit || ture
+          # Run cargo audit but don't fail the job on vulnerability reports yet.
+          # Remove "|| true" to make it blocking when ready.
+          cargo audit || true
